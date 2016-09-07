@@ -44,8 +44,8 @@ struct List {
 		}
 	}
 };
-void printList(List& list) {
-	ListNode* cur = list.head;
+void printList(ListNode* head) {
+	ListNode* cur = head;
 	do {
 		std::cout << cur->val;
 		cur=cur->next;
@@ -60,7 +60,7 @@ void test1(){
 	List list;
 	for(int i = 0; i < 10; ++i)
 		list.push(count++);
-	printList(list);
+	printList(list.head);
 	
 	int k=4;
 	ListNode* cur = list.head;
@@ -84,12 +84,12 @@ void test1(){
 		}
 		cur = cur->next;
 	}
-	printList(list);
+	printList(list.head);
 }
 
 ListNode* reverseKGroup(ListNode* head, int k) {
 	if(!head) return NULL;
-	int size = 0;
+	int size = 1;
 	ListNode* curr = head;
 	while(curr->next) {
 		size += 1;
@@ -98,20 +98,22 @@ ListNode* reverseKGroup(ListNode* head, int k) {
 	if(size<k)
 		return head;
 	//head->next = NULL;
-	int n = 2;//size/k;
-	ListNode* cur=head;
+	int n = size/k;
+	ListNode dummy(-1);
+	dummy.next = head;
+	ListNode* cur=&dummy;
 	ListNode* next = cur->next;
 	int kk = k;
 	ListNode* newHead = NULL;
 	ListNode* tail = head;
 	int count = 0;
 	for (int i=0; i<n; ++i) {
-		if(size-count <k) {
+		if(size-count <k-1) {
 			tail->next = cur;
 			break;
 
 		}
-		while(--kk) {
+		while(kk--) {
 			ListNode* t = next->next;
 			next->next = cur;
 			cur=next;
@@ -122,17 +124,18 @@ ListNode* reverseKGroup(ListNode* head, int k) {
 			newHead=cur;
 			head->next = cur;
 			tail = head;
+			tail->next = next;
 		}
 		else {
 			ListNode* t=tail->next;
 			tail->next = cur;
 			tail = t;
+			tail->next = next;
 			//		ListNode* t = head;
 			//		head = cur;
 		}
 
 		kk=k;
-
 		
 	}
 
@@ -167,9 +170,9 @@ void test2(){
 	List list;
 	for(int i = 0; i < 10; ++i)
 		list.push(count++);
-	printList(list);
-	list.head = reverseKGroup(list.head, 4);
-	printList(list);
+	printList(list.head);
+	list.head = reverseKGroup(list.head, 3);
+	printList(list.head);
 }
 int main(int argc, const char * argv[]) {
 	// insert code here...
