@@ -22,6 +22,9 @@
 //For k = 3, you should return: 3->2->1->4->5
 
 #include <iostream>
+#include <map>
+#include <list>
+#include <vector>
 
 struct ListNode {
 	int val;
@@ -302,15 +305,138 @@ void test6() {
 	list.push(&a);
 	for(int i = 0; i < 9; ++i)
 		list.push(count++);
+	
 	ListNode b(0);
 	b.next = &a;
 	list.push(&b);
 	std::cout<<hasLoop(list.head);
 }
 
+//Find the lowest common ancestor of two given nodes in a given binary tree.
+struct TreeNode {
+	TreeNode* left;
+	TreeNode* right;
+	TreeNode* parent;
+	int val;
+};
+
+int nodeLevel(TreeNode* node) {
+	int level = 0;
+	while(node) {
+		node = node->parent;
+		level += 1;
+		
+	}
+	return level;
+}
+
+//TreeNode* lowestCommonAncestor(TreeNode* tree, TreeNode* node1, TreeNode* node2) {
+//
+////	if(node1!=node2 && ) {
+////		
+////	}
+//}
+
+//1) What is LRU. How to Implement it.
+//2) Find kth smallest element in an array.
+//3) In a file, there are two columns, first column has some word (String) and 2nd column has some value (Double).
+//Example :-
+//ABC 23.4
+//ERF 34.89
+//WERT 122.9
+
+// Find kth smallest element in an array.
+struct LRU
+{
+	std::map<std::string, int> list;
+	
+};
+
+std::list<int> findSmallest(int k, std::vector<int> source)
+{
+	std::list<int> ret = std::list<int>();
+	if(source.size()==0)
+		return ret;
+	else
+		ret.push_back(source[0]);
+	for(int i = 1; i < source.size(); i++)
+	{
+		if(ret.size()<k || source[i]<ret.back())
+		{
+			for(auto j = ret.begin(); ; j++)
+			{
+				if(source[i]<*j || j == ret.end())
+				{
+					ret.insert(j, source[i]);
+					if(ret.size()>k)
+						ret.pop_back();
+					break;
+				}
+
+			}
+		}
+	}
+	return ret;
+}
+
+
+void test7() {
+	std::vector<int> target = std::vector<int>();
+	
+	for(int i = 0; i<10; i++)
+	{
+		int num = random()%100;
+		target.push_back(num);
+		std::cout<<num<<" ";
+	}
+	std::cout<<std::endl;
+	std::list<int> result = findSmallest(5, target);
+	for(auto i = result.begin(); i!= result.end(); i++)
+	{
+		std::cout<<*i<<" ";
+	}
+	std::cout<<std::endl;
+}
+
+//2) Given a string str. You have to make this string to square string with maximum length. A square string is of the following format:
+
+//str = x + x; where x is any string. Return length of this square string.
+//Example
+//str = ababa
+//Max length square string = 4;
+//str = abcd
+//Max length square string = 1;
+
+int squareLength(std::string& input)
+{
+	int windowSize = input.size()/2;
+	while(windowSize>1)
+	{
+		for(int i=0; i+windowSize*2<=input.size(); i++)
+		{
+			if(input.substr(i, windowSize)==input.substr(i+windowSize, windowSize))
+			{
+				return windowSize;
+			}
+		}
+		windowSize--;
+	}
+	return 1;
+}
+void test8()
+{
+	std::string input = "dededededede";
+	std::cout<< squareLength(input)<<std::endl;
+}
+
+
+//1) Asked about current project. Asked to draw architecture of my project. Then Asked to design a new feature that is currently not there in my project.
+//2) Design undo and redo operation in Microsoft Word like text editor.
+//3) Design Hit Counter. (Design Hit Counter)
+
 int main(int argc, const char * argv[]) {
 	// insert code here...
 
-	test6();
+	test8();
     return 0;
 }
