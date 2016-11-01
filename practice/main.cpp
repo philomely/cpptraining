@@ -25,6 +25,8 @@
 #include <map>
 #include <list>
 #include <vector>
+#include <iomanip>
+#include <queue>
 
 struct ListNode {
 	int val;
@@ -313,22 +315,22 @@ void test6() {
 }
 
 //Find the lowest common ancestor of two given nodes in a given binary tree.
-struct TreeNode {
-	TreeNode* left;
-	TreeNode* right;
-	TreeNode* parent;
-	int val;
-};
-
-int nodeLevel(TreeNode* node) {
-	int level = 0;
-	while(node) {
-		node = node->parent;
-		level += 1;
-		
-	}
-	return level;
-}
+//struct TreeNode {
+//	TreeNode* left;
+//	TreeNode* right;
+//	TreeNode* parent;
+//	int val;
+//};
+//
+//int nodeLevel(TreeNode* node) {
+//	int level = 0;
+//	while(node) {
+//		node = node->parent;
+//		level += 1;
+//		
+//	}
+//	return level;
+//}
 
 //TreeNode* lowestCommonAncestor(TreeNode* tree, TreeNode* node1, TreeNode* node2) {
 //
@@ -434,9 +436,64 @@ void test8()
 //2) Design undo and redo operation in Microsoft Word like text editor.
 //3) Design Hit Counter. (Design Hit Counter)
 
+struct TreeNode {
+	TreeNode(int v):val(v){}
+	TreeNode* l;
+	TreeNode* r;
+	int val;
+};
+
+int treeDepth(TreeNode* root, int depth)
+{
+	int l = depth;
+	if(root->l)
+		l = treeDepth(root->l, depth+1);
+	int r = depth;
+	if(root->r)
+		r = treeDepth(root->r, depth+1);
+	return l>r?l:r;
+}
+
+
+void printTreeNode(TreeNode* root, int indentation)
+{
+	std::cout<<std::setw(indentation*2)<<root->val<<std::endl;
+	//if(root->l)
+	//	printTreeNode(root->l, )
+}
+
+
+
+TreeNode* createBST(int depth, int v)
+{
+	if(depth==0)
+		return 0;
+	TreeNode* node = new TreeNode(v);
+	node->l = createBST(depth-1, v-1);
+	node->r = createBST(depth-1, v+1);
+	return node;
+}
+
+std::vector<int> intsAtDepth(TreeNode* root, int depth)
+{
+	std::queue<TreeNode*> queue;
+	queue.push(root);
+	while(!queue.empty()) {
+		TreeNode* node = queue.front();
+		queue.pop();
+		
+	}
+}
+
+void test9()
+{
+	TreeNode* root = createBST(10, 10);
+	std::cout<<treeDepth(root, 1);
+}
+
 int main(int argc, const char * argv[]) {
 	// insert code here...
 
-	test8();
+	test9();
     return 0;
 }
