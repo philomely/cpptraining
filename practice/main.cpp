@@ -27,6 +27,9 @@
 #include <vector>
 #include <iomanip>
 #include <queue>
+#include <math.h>
+#include <string>
+#include <time.h>
 
 struct ListNode {
 	int val;
@@ -437,7 +440,7 @@ void test8()
 //3) Design Hit Counter. (Design Hit Counter)
 
 struct TreeNode {
-	TreeNode(int v):val(v){}
+	TreeNode(int v):val(v),l(0),r(0){}
 	TreeNode* l;
 	TreeNode* r;
 	int val;
@@ -474,26 +477,103 @@ TreeNode* createBST(int depth, int v)
 	return node;
 }
 
-std::vector<int> intsAtDepth(TreeNode* root, int depth)
+void insertBST(TreeNode* node, int v)
 {
-	std::queue<TreeNode*> queue;
-	queue.push(root);
-	while(!queue.empty()) {
-		TreeNode* node = queue.front();
-		queue.pop();
-		
+	if(v<node->val) {
+		if(node->l)
+			insertBST(node->l, v);
+		else
+			node->l = new TreeNode(v);
+	}
+	else {
+		if(node->r)
+			insertBST(node->r, v);
+		else
+			node->r = new TreeNode(v);
+	}
+}
+
+TreeNode* createBstFromVector(std::vector<int>& s)
+{
+	TreeNode* root = 0;
+	for(int i=0; i<s.size(); i++) {
+		if(i==0)
+			root = new TreeNode(s[i]);
+		else
+			insertBST(root, s[i]);
+	}
+	return root;
+}
+
+void intsAtDepth(TreeNode* node, int targetDepth, int depth, std::vector<std::string>& result)
+{
+	if(depth == targetDepth) {
+		if(node)
+			result.push_back(std::to_string(node->val));
+		else
+			result.push_back("E");
+
+	}
+	else if(depth < targetDepth) {
+		if(!node) {
+			int n = pow(2,targetDepth - depth);
+			for(int i=0; i<n; i++)
+				result.push_back("E");
+			return;
+		}
+		intsAtDepth(node->l, targetDepth, depth+1, result);
+		intsAtDepth(node->r, targetDepth, depth+1, result);
+	}
+	else {
+		return;
+	}
+}
+
+void printByDepth(TreeNode* root, int depth, int maxDepth)
+{
+	std::vector<std::string> result;
+	int range = (pow(2, maxDepth-1)+pow(2, maxDepth-1)-1);
+	int space = (range)/(pow(2, (depth-1))+1);
+	intsAtDepth(root, depth, 1, result);
+	std::cout<<std::string(space/2, ' ');
+	for(int i = 0; i<result.size(); i++) {
+		std::cout << result[i] << std::string(space/2, ' ');
+	}
+	std::cout<<std::endl;
+}
+
+void printTree(TreeNode* root)
+{
+	int depth = treeDepth(root, 1);
+	for(int i = 1; i< depth; i++) {
+		printByDepth(root, i, depth);
+		std::cout<<std::endl;
 	}
 }
 
 void test9()
 {
-	TreeNode* root = createBST(10, 10);
-	std::cout<<treeDepth(root, 1);
+	TreeNode* root = createBST(6, 10);
+	//std::cout<<"depth "<<treeDepth(root, 1);
+	std::vector<int> result;
+	printTree(root);
+}
+
+void test10()
+{
+	std::vector<int> s;
+	for(int i = 0; i < 10; i++) {
+		int num = rand()%100;
+		s.push_back(num);
+	}
+	TreeNode* root = createBstFromVector(s);
+	printTree(root);
+	
 }
 
 int main(int argc, const char * argv[]) {
 	// insert code here...
-
-	test9();
+	srand (time(NULL));
+	test10();
     return 0;
 }
